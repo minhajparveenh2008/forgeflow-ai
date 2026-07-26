@@ -1,0 +1,6 @@
+{
+  "name": "ForgeFlow AI",
+  "description": "Private AI-Powered Software Development Workspace for Ideation, Planning, Building, Deep Code Understanding, Verification, and Deployment.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
