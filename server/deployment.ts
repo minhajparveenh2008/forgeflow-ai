@@ -291,12 +291,13 @@ export async function verifyHttpsHealth(
     }
   });
 }
-
 export async function runDeploymentPipeline(
+
   reqHost?: string,
   jobId?: string
 ): Promise<DeploymentVerificationResult> {
-  const provider = 'Google Cloud Run';
+ 
+  const provider = 'Render';
   const timestamp = new Date().toISOString();
   const deploymentId = jobId ? `cloudrun-${jobId.slice(0, 8)}` : `cloudrun-${Date.now().toString(36)}`;
 

@@ -48,7 +48,10 @@ import {
   collectCompleteProjectSource,
 } from './server/github';
 import { runDeploymentPipeline } from './server/deployment';
-
+import {
+  createRenderWebService,
+  waitForRenderService,
+} from './server/renderDeployment';
 dotenv.config();
 
 const app = express();
@@ -937,7 +940,24 @@ app.post('/api/projects/:id/github-and-deploy', requireAuth, async (req: AuthReq
 
         await new Promise(r => setTimeout(r, 600));
 
-        const deployResult = await runDeploymentPipeline(req.headers.host, job.jobId);
+       const deployResult = await runDeploymentPipeline(req.headers.host, job.jobId);
+
+if (deployResult.status === 'live') {
+ const renderService = await createRenderWebService(
+  `${job.jobId}-generated-app`,
+  `https://github.com/minhajparveenh2008/${job.githubRepo}`
+);
+
+  const liveService = await waitForRenderService(renderService.id);
+
+  deployResult.canonicalUrl =
+    liveService.serviceDetails?.url || '';
+
+  deployResult.liveUrl =
+    liveService.serviceDetails?.url || '';
+
+  deployResult.provider = 'Render';
+}
         deploySuccess = deployResult.status === 'live';
 
         logs.push(`${ts()} Provider: ${deployResult.provider}`);
